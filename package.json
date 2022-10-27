@@ -15,10 +15,12 @@
     "@trpc/next": "^10.0.0-proxy-beta.26",
     "@trpc/react-query": "^10.0.0-proxy-beta.26",
     "@trpc/server": "^10.0.0-proxy-beta.26",
+    "framer-motion": "^7.6.2",
     "next": "13.0.0",
     "pokenode-ts": "^1.17.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^4.6.0",
     "zod": "^3.19.1"
   },
   "devDependencies": {
