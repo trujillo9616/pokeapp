@@ -19,12 +19,26 @@ const Home: NextPage = () => {
 
   const firstPokemon = trpc.getPokemonById.useQuery({ id: first });
   const secondPokemon = trpc.getPokemonById.useQuery({ id: second });
+  const voteMutation = trpc.castVote.useMutation();
 
   const voteForCutest = (selected: number | undefined) => {
-    // TODO: implement voting
-    const [first, second] = getOptionsForVote();
-    setFirst(first);
-    setSecond(second);
+    if (selected === undefined) return;
+
+    const votes =
+      selected === first
+        ? {
+            votedFor: first,
+            votedAgainst: second,
+          }
+        : {
+            votedFor: second,
+            votedAgainst: first,
+          };
+
+    voteMutation.mutate(votes);
+    const [firstId, secondId] = getOptionsForVote();
+    setFirst(firstId);
+    setSecond(secondId);
   };
 
   return (
