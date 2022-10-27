@@ -15,14 +15,12 @@ const BUTTON = {
 
 const PokemonListing: React.FC<PokemonListingProps> = ({ pokemon, vote }) => {
   return (
-    <div className="w-64 h-64 flex flex-col justify-center items-center">
+    <div className="w-full h-full flex flex-col justify-center items-center">
       <Image
         src={pokemon?.sprites.front_default!}
         alt={pokemon?.name!}
         width={64}
         height={64}
-        placeholder="blur"
-        blurDataURL={pokemon?.sprites.front_default!}
         priority
         className="w-full h-full"
       />
