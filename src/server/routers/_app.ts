@@ -11,7 +11,8 @@ export const appRouter = router({
     )
     .query(async ({ input }) => {
       const api = new PokemonClient();
-      return await api.getPokemonById(input.id);
+      const pokemon = await api.getPokemonById(input.id);
+      return { id: pokemon.id, name: pokemon.name, sprites: pokemon.sprites };
     }),
 });
 
