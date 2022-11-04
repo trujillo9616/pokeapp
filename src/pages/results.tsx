@@ -5,6 +5,7 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Head from "next/head";
 
 const getPokemonResults = async () => {
   return await prisma.pokemon.findMany({
@@ -55,25 +56,39 @@ const ResultsPage: React.FC<{
 }> = (props) => {
   console.log(props);
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex flex-col items-center py-6">
-        <h2 className="text-3xl">Results</h2>
-        <motion.div
-          className="px-4"
-          initial={{ opacity: 0.3, scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 0.4 }}
-          whileHover={{ scale: 1.2, opacity: 1, transition: { duration: 0.2 } }}
-        >
-          <Link href="/" className="">
-            Go Back
-          </Link>
-        </motion.div>
-      </div>
-      <div className="flex flex-col w-full max-w-2xl border">
-        {props.pokemon.map((pokemon) => {
-          return <PokemonListing key={pokemon.id} {...pokemon} />;
-        })}
+    <div className="h-screen w-screen flex flex-col justify-between items-center">
+      <Head>
+        <title>Cutemon - Results</title>
+        <meta name="description" content="Cutest Pokemon Vote App" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center py-6">
+          <h2 className="text-3xl">Results</h2>
+          <motion.div
+            className="px-4"
+            initial={{ opacity: 0.3, scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.4 }}
+            whileHover={{
+              scale: 1.2,
+              opacity: 1,
+              transition: { duration: 0.2 },
+            }}
+          >
+            <Link href="/" className="">
+              Go Back
+            </Link>
+          </motion.div>
+        </div>
+        <div className="flex flex-col w-full max-w-2xl border">
+          {props.pokemon
+            .sort((a, b) => generatePercentage(b) - generatePercentage(a))
+            .map((pokemon) => {
+              return <PokemonListing key={pokemon.id} {...pokemon} />;
+            })}
+        </div>
       </div>
     </div>
   );
@@ -87,6 +102,6 @@ export const getStaticProps: GetServerSideProps = async () => {
     props: {
       pokemon: pokemonResults,
     },
-    revalidate: 60,
+    revalidate: 10,
   };
 };
