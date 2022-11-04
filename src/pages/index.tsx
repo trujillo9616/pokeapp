@@ -9,6 +9,7 @@ import PokemonListing from "@/components/PokemonListing";
 
 import { trpc } from "../utils/trpc";
 import Image from "next/image";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const [first, setFirst] = useState(0);
@@ -45,14 +46,14 @@ const Home: NextPage = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col justify-center items-center">
+    <div className="h-screen w-screen flex flex-col justify-between items-center">
       <Head>
         <title>Cutemon</title>
         <meta name="description" content="Cutest Pokemon Vote App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="text-2xl text-center">
+      <div className="text-2xl text-center pt-8">
         Which
         <motion.img
           src="/images/pokemon.png"
@@ -69,12 +70,12 @@ const Home: NextPage = () => {
         {!firstPokemon.isLoading && !secondPokemon.isLoading ? (
           <>
             <PokemonListing pokemon={firstPokemon.data} vote={voteForCutest} />
-            <div className="text-2xl text-center">or</div>
+            <div className="text-2xl text-center mx-4">or</div>
             <PokemonListing pokemon={secondPokemon.data} vote={voteForCutest} />
           </>
         ) : (
           <div className="flex flex-col justify-center items-center">
-            <div className="text-2xl text-center">Loading...</div>
+            {/* <div className="text-2xl text-center">Loading...</div> */}
             <Image
               src="/images/pokeball.png"
               alt="pokeball"
@@ -84,21 +85,33 @@ const Home: NextPage = () => {
           </div>
         )}
       </div>
-      <motion.div
-        className="absolute bottom-4"
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 0.3, scale: 1 }}
-        transition={{ duration: 0.4 }}
-        whileHover={{ scale: 1.2, opacity: 1, transition: { duration: 0.2 } }}
-      >
-        <a
-          href="https://github.com/trujillo9616/pokeapp"
-          target="_blank"
-          rel="noreferrer"
+      <div className="flex pb-8">
+        <motion.div
+          className="px-4"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 0.3, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          whileHover={{ scale: 1.2, opacity: 1, transition: { duration: 0.2 } }}
         >
-          <BsGithub className="text-2xl" />
-        </a>
-      </motion.div>
+          <a
+            href="https://github.com/trujillo9616/pokeapp"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <BsGithub className="text-2xl" />
+          </a>
+        </motion.div>
+        {" | "}
+        <motion.div
+          className="px-4"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 0.3, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          whileHover={{ scale: 1.2, opacity: 1, transition: { duration: 0.2 } }}
+        >
+          <Link href="/results">See Results!</Link>
+        </motion.div>
+      </div>
     </div>
   );
 };
