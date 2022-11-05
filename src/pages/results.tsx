@@ -2,10 +2,11 @@ import React from "react";
 import { prisma } from "@/server/utils/prisma";
 import { AsyncReturnType } from "@/utils/ts-bs";
 import { GetServerSideProps } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Head from "next/head";
+import ResultsListing from "@/components/ResultsListing";
+import { generatePercentage } from "@/utils/generatePercentage";
 
 const getPokemonResults = async () => {
   return await prisma.pokemon.findMany({
@@ -26,30 +27,7 @@ const getPokemonResults = async () => {
   });
 };
 
-type PokemonQueryResult = AsyncReturnType<typeof getPokemonResults>;
-
-const generatePercentage = (pokemon: PokemonQueryResult[number]) => {
-  const { votesFor, votesAgainst } = pokemon._count;
-  if (votesFor + votesAgainst === 0) return 0;
-  return Math.round((votesFor / (votesFor + votesAgainst)) * 100);
-};
-
-const PokemonListing = (pokemon: PokemonQueryResult[number]) => {
-  return (
-    <div className="flex border-b p-2 items-center justify-between">
-      <div className="flex items-center">
-        <Image
-          src={pokemon.spriteUrl}
-          alt={pokemon.name}
-          width={64}
-          height={64}
-        />
-        <div className="capitalize">{pokemon.name}</div>
-      </div>
-      <div className="pr-4">{generatePercentage(pokemon) + "%"}</div>
-    </div>
-  );
-};
+export type PokemonQueryResult = AsyncReturnType<typeof getPokemonResults>;
 
 const ResultsPage: React.FC<{
   pokemon: PokemonQueryResult;
@@ -84,9 +62,13 @@ const ResultsPage: React.FC<{
         </div>
         <div className="flex flex-col w-full max-w-2xl border">
           {props.pokemon
-            .sort((a, b) => generatePercentage(b) - generatePercentage(a))
+            .sort((a, b) => {
+              if (generatePercentage(a) === generatePercentage(b))
+                return b._count.votesFor - a._count.votesFor;
+              return generatePercentage(b) - generatePercentage(a);
+            })
             .map((pokemon) => {
-              return <PokemonListing key={pokemon.id} {...pokemon} />;
+              return <ResultsListing key={pokemon.id} pokemon={pokemon} />;
             })}
         </div>
       </div>
